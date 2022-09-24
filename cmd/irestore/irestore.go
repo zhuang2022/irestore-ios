@@ -187,7 +187,6 @@ func dumpkeys(db *backup.MobileBackup, outfile string) {
 			fmt.Println(rec)
 			data, err := db.ReadFile(rec)
 			must(err)
-			ioutil.WriteFile("kcb.plist", data, 0x644)
 
 			fmt.Println("read", len(data))
 			var v Keychain
