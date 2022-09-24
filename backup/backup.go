@@ -18,9 +18,9 @@ import (
 	"path"
 	"sort"
 
-	"github.com/dnicolson/ios/crypto/aeswrap"
-	"github.com/dnicolson/ios/keybag"
-	"github.com/dnicolson/ios/kvarchive"
+	"github.com/dnicolson/irestore/crypto/aeswrap"
+	"github.com/dnicolson/irestore/keybag"
+	"github.com/dnicolson/irestore/kvarchive"
 	"github.com/dunhamsteve/plist"
 	_ "github.com/mattn/go-sqlite3"
 )

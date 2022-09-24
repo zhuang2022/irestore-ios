@@ -18,10 +18,10 @@ import (
 
 	"crypto/aes"
 
-	"github.com/dnicolson/ios/backup"
-	"github.com/dnicolson/ios/crypto/aeswrap"
-	"github.com/dnicolson/ios/crypto/gcm"
-	"github.com/dnicolson/ios/encoding/asn1"
+	"github.com/dnicolson/irestore/backup"
+	"github.com/dnicolson/irestore/crypto/aeswrap"
+	"github.com/dnicolson/irestore/crypto/gcm"
+	"github.com/dnicolson/irestore/encoding/asn1"
 	"github.com/dunhamsteve/plist"
 	"golang.org/x/crypto/ssh/terminal"
 )
