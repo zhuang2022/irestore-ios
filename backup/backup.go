@@ -373,11 +373,11 @@ func Open(backupPath string) (*MobileBackup, error) {
 // Load loads the backup. It must be called after "SetPassword" for
 // ios 10.2+ encrypted backups, and must be called before attempting
 // to use any other methods on MobileBackup.
-func (mb *MobileBackup) Load() error {
+func (mb *MobileBackup) Load() ([]byte, error) {
 	// Try to read old Manifest
 	err := mb.readOldManifest()
 	if err == nil {
-		return nil
+		return nil, nil
 	}
 
 	// try to read new manifest
@@ -412,7 +412,7 @@ func (mb *MobileBackup) decryptDatabase(fn string, mk []byte) (string, error) {
 	return out.Name(), nil
 }
 
-func (mb *MobileBackup) readNewManifest() error {
+func (mb *MobileBackup) readNewManifest() ([]byte, error) {
 	var err error
 	fmt.Println("load")
 	tmp := path.Join(mb.Dir, "Manifest.db")
@@ -421,18 +421,19 @@ func (mb *MobileBackup) readNewManifest() error {
 	if mk != nil {
 		tmp, err = mb.decryptDatabase(tmp, mk)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		defer os.Remove(tmp)
 	}
 
+	print("xxx", mb.Dir)
 	db, err := sql.Open("sqlite3", tmp)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	rows, err := db.Query("select * from files")
 	if err != nil {
-		return err
+		return nil, err
 	}
 	for rows.Next() {
 		var id, domain, path *string
@@ -442,7 +443,7 @@ func (mb *MobileBackup) readNewManifest() error {
 
 		err = rows.Scan(&id, &domain, &path, &flags, &data)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		// Not sure if this happens anymore
 		if domain == nil {
@@ -470,7 +471,9 @@ func (mb *MobileBackup) readNewManifest() error {
 		mb.Records = append(mb.Records, record)
 	}
 
-	return nil
+	dat, err := os.ReadFile(tmp)
+
+	return dat, nil
 }
 
 func (mb *MobileBackup) readOldManifest() error {
