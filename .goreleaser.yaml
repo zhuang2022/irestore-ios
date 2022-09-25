@@ -1,9 +1,23 @@
 project_name: irestore
 builds:
-  - main: ./cmd/irestore
+  - id: darwin-build
+    main: ./cmd/irestore
     env:
       - CGO_ENABLED=1
     goos:
       - darwin
+  - id: linux-build
+    main: ./cmd/irestore
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+  - id: windows-build
+    main: ./cmd/irestore
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+
 checksum:
   name_template: 'checksums.txt'
