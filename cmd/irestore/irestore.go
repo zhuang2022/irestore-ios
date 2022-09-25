@@ -367,42 +367,24 @@ func restore(db *backup.MobileBackup, domain string, dest string) {
 }
 
 func main() {
-	// first component is udid
-	mm, err := backup.Enumerate()
-	must(err)
+	help := func() {
+		fmt.Println(`Usage:
+    ls [domain]
+    restore domain dest
+    dumpkeys [outputfile]
+    encryptkeys [inputfile] [outputfile]
+    apps`)
+	}
 
 	var selected *backup.Backup
 
 	if len(os.Args) > 1 {
-		key := os.Args[1]
-		for _, man := range mm {
-			dashed := strings.Contains(man.FileName, "-")
-			if man.DeviceName == key && !dashed {
-				selected = &man
-				break
-			}
-			if man.FileName == key {
-				selected = &man
-				break
-			}
-			if strings.Contains(man.DeviceName, key) && !dashed {
-				selected = &man
-				break
-			}
-			if strings.Contains(man.FileName, key) && !dashed {
-				selected = &man
-				break
-			}
-		}
-	}
-
-	if selected == nil {
-		for _, man := range mm {
-			fmt.Println(man.DeviceName, "\t", man.FileName)
-		}
+		backupPath := os.Args[1]
+		selected = &backup.Backup{DeviceName: "", FileName: backupPath}
+	} else {
+		help()
 		return
 	}
-	fmt.Println("Selected", selected.DeviceName, selected.FileName)
 
 	db, err := backup.Open(selected.FileName)
 	must(err)
@@ -417,15 +399,6 @@ func main() {
 			fmt.Println(domain)
 		}
 		return
-	}
-
-	help := func() {
-		fmt.Println(`Usage:
-    ls [domain]
-    restore domain dest
-    dumpkeys [outputfile]
-    encryptkeys [inputfile] [outputfile]
-    apps`)
 	}
 
 	var cmd string
