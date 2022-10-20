@@ -426,7 +426,6 @@ func (mb *MobileBackup) readNewManifest() ([]byte, error) {
 		defer os.Remove(tmp)
 	}
 
-	print("xxx", mb.Dir)
 	db, err := sql.Open("sqlite3", tmp)
 	if err != nil {
 		return nil, err
