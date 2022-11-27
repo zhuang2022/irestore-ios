@@ -15,6 +15,7 @@ import (
 	"os"
 	"path"
 	"strings"
+	"syscall"
 
 	"crypto/aes"
 
@@ -41,7 +42,7 @@ func dumpJSON(x interface{}) {
 
 func getpass() string {
 	fmt.Fprint(os.Stderr, "Backup Password: ")
-	pw, err := terminal.ReadPassword(0)
+	pw, err := terminal.ReadPassword(int(syscall.Stdin))
 	must(err)
 	fmt.Println()
 	return string(pw)
