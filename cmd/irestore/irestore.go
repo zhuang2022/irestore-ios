@@ -15,8 +15,6 @@ import (
 	"os"
 	"path"
 	"strings"
-	"syscall"
-
 	"crypto/aes"
 
 	"github.com/dnicolson/irestore/backup"
@@ -24,7 +22,6 @@ import (
 	"github.com/dnicolson/irestore/crypto/gcm"
 	"github.com/dnicolson/irestore/encoding/asn1"
 	"github.com/dunhamsteve/plist"
-	"golang.org/x/crypto/ssh/terminal"
 )
 
 // Quick and Dirty error handling - when I don't expect an error, but want to know if it happens
@@ -41,7 +38,7 @@ func dumpJSON(x interface{}) {
 }
 
 func getpass() string {
-	 "1234"
+	return "1234"
 }
 
 func domains(db *backup.MobileBackup) {
@@ -215,7 +212,7 @@ func unparseRecord(record map[string]interface{}) []byte {
 	types := strings.Split(fmt.Sprint(record["_fieldTypes"]), ",")
 
 	for index, key := range keys {
-		if (strings.HasPrefix(key, "_")) {
+		if strings.HasPrefix(key, "_") {
 			continue
 		}
 
@@ -247,10 +244,10 @@ func unparseRecord(record map[string]interface{}) []byte {
 	return entries
 }
 
-func encryptKeyGroup(db *backup.MobileBackup, group interface {}, class string) []KCEntry {
+func encryptKeyGroup(db *backup.MobileBackup, group interface{}, class string) []KCEntry {
 	var rval []KCEntry
 
-	if (group == nil) {
+	if group == nil {
 		return rval
 	}
 
@@ -265,10 +262,10 @@ func encryptKeyGroup(db *backup.MobileBackup, group interface {}, class string) 
 
 		c, err := aes.NewCipher(key)
 		must(err)
-	
+
 		gcm, err := gcm.NewGCM(c)
 		must(err)
-	
+
 		unparsed := unparseRecord(recordObject)
 
 		nonce := []byte{}
@@ -284,7 +281,7 @@ func encryptKeyGroup(db *backup.MobileBackup, group interface {}, class string) 
 		entry.Data = data
 		ref, _ := base64.StdEncoding.DecodeString(recordObject["_ref"].(string))
 		entry.Ref = ref
-		
+
 		rval = append(rval, entry)
 	}
 
